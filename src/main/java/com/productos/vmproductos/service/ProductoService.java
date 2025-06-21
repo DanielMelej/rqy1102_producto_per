@@ -29,23 +29,23 @@ private ProductoRepository productoRepository;
         return productoRepository.save(producto);
     }
 
-                    public Producto update(Integer id, Producto productoActualizado) {
-                        Producto productoExistente = productoRepository.findById(id)
-                            .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID " + id));
+    public Producto update(Integer id, Producto productoActualizado) {
+        Producto productoExistente = productoRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID " + id));
 
-                        // Reglas de negocio: proteger el ID
-                        if (productoActualizado.getIdProducto() != null && !productoActualizado.getIdProducto().equals(id)) {
-                            throw new RuntimeException("No se puede cambiar el ID del producto");
-                        }
+        // Reglas de negocio: proteger el ID
+        if (productoActualizado.getIdProducto() != null && !productoActualizado.getIdProducto().equals(id)) {
+            throw new RuntimeException("No se puede cambiar el ID del producto");
+        }
 
-                        // Actualizar campos permitidos
-                        productoExistente.setNombre(productoActualizado.getNombre());
-                        productoExistente.setPrecio(productoActualizado.getPrecio());
-                        productoExistente.setStock(productoActualizado.getStock());
-                        productoExistente.setTamano(productoActualizado.getTamano());
+        // Actualizar campos permitidos
+        productoExistente.setNombre(productoActualizado.getNombre());
+        productoExistente.setPrecio(productoActualizado.getPrecio());
+        productoExistente.setStock(productoActualizado.getStock());
+        productoExistente.setTamano(productoActualizado.getTamano());
 
-                        return productoRepository.save(productoExistente); // ¡Usa el existente!
-                    }
+        return productoRepository.save(productoExistente); // ¡Usa el existente!
+    }
 
     public void delete(Integer id) {
         productoRepository.deleteById(id);

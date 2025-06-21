@@ -1,7 +1,6 @@
 package com.productos.vmproductos.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,14 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.productos.vmproductos.model.Producto;
-import com.productos.vmproductos.repository.ProductoRepository;
 import com.productos.vmproductos.service.ProductoService;
 
 @RestController
-@RequestMapping("/api/v1/productos")
+@RequestMapping("${app.api.base-url}/productos")
 public class ProductoController {
-    @Autowired
-    private ProductoRepository productoRepository;
     @Autowired
     private ProductoService productoService;
 
@@ -52,15 +48,15 @@ public class ProductoController {
         return ResponseEntity.ok(saveProducto);
     }
 
-        @PutMapping("/{id}")
-        public ResponseEntity<Producto> actualizar(@PathVariable Integer id, @RequestBody Producto productoActualizado) {
-            try {
-                Producto producto = productoService.update(id, productoActualizado);
-                return ResponseEntity.ok(producto);
-            } catch (RuntimeException e) {
-                return ResponseEntity.badRequest().body(null);
-            }
+    @PutMapping("/{id}")
+    public ResponseEntity<Producto> actualizar(@PathVariable Integer id, @RequestBody Producto productoActualizado) {
+        try {
+            Producto producto = productoService.update(id, productoActualizado);
+            return ResponseEntity.ok(producto);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(null);
         }
+    }
 
 
     @DeleteMapping("/{id}")
@@ -72,19 +68,5 @@ public class ProductoController {
             return ResponseEntity.notFound().build();
         }
     }
-
-
-    @PutMapping("/productos/{id}/stock/{nuevoStock}")
-    public ResponseEntity<Void> actualizarStock(@PathVariable Integer id, @PathVariable Integer nuevoStock) {
-        Optional<Producto> productoOptional = productoRepository.findById(id);
-        if (productoOptional.isPresent()) {
-            Producto producto = productoOptional.get();
-            producto.setStock(nuevoStock);
-            productoRepository.save(producto);
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.notFound().build();
-    }
-
 }
 
