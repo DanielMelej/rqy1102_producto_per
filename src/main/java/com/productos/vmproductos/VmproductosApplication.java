@@ -10,5 +10,4 @@ public class VmproductosApplication {
 		SpringApplication.run(VmproductosApplication.class, args);
 	}
 
-	
 }

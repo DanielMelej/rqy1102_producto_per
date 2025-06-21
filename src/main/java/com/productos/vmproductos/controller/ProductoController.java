@@ -22,42 +22,52 @@ public class ProductoController {
     @Autowired
     private ProductoService productoService;
 
-
     @GetMapping
-    public ResponseEntity<List<Producto>> listar(){
+    public ResponseEntity<List<Producto>> listar() {
         List<Producto> productos = productoService.getAllProductos();
-        if (productos.isEmpty()){
+        if (productos.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(productos);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Producto> buscar(@PathVariable Integer id){
-        try{
+    public ResponseEntity<Producto> buscar(@PathVariable Integer id) {
+        try {
             Producto producto = productoService.findById(id);
             return ResponseEntity.ok(producto);
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
     }
 
     @PostMapping
-    public ResponseEntity<Producto> crearProducto(@RequestBody Producto producto) {
-        Producto saveProducto = productoService.save(producto);
-        return ResponseEntity.ok(saveProducto);
+    public ResponseEntity<?> save(@RequestBody Producto producto) {
+        try {
+            Producto saveProducto = productoService.save(producto);
+            return ResponseEntity.ok(saveProducto);
+        } catch (RuntimeException e) {
+            // Devuelve el mensaje de error personalizado con código 400 (Bad Request)
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            // Si ocurre otro error inesperado
+            return ResponseEntity.status(500).body("Error interno al crear el producto");
+        }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Producto> actualizar(@PathVariable Integer id, @RequestBody Producto productoActualizado) {
+    public ResponseEntity<?> actualizar(@PathVariable Integer id, @RequestBody Producto productoActualizado) {
         try {
             Producto producto = productoService.update(id, productoActualizado);
             return ResponseEntity.ok(producto);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(null);
+            // Errores de validación o lógica de negocio
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            // Otros errores inesperados
+            return ResponseEntity.status(500).body("❌ Error interno al actualizar el producto.");
         }
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
@@ -69,4 +79,3 @@ public class ProductoController {
         }
     }
 }
-
