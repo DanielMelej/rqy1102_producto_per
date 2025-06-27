@@ -29,8 +29,8 @@ public class ProductoServiceTest {
 
     @Test
     void testGetAllProductos() {
-        Producto producto1 = new Producto(1, "Producto1", 100.0f, 10, "100ml");
-        Producto producto2 = new Producto(2, "Producto2", 200.0f, 20, "50ml");
+        Producto producto1 = new Producto(1, "Producto1", 100.0f, 10, 100);
+        Producto producto2 = new Producto(2, "Producto2", 200.0f, 20, 100);
         List<Producto> productos = Arrays.asList(producto1, producto2);
 
         when(productoRepository.findAll()).thenReturn(productos);
@@ -43,7 +43,7 @@ public class ProductoServiceTest {
 
     @Test
     void testFindById() {
-        Producto producto = new Producto(1, "Producto1", 100.0f, 10, "100ml");
+        Producto producto = new Producto(1, "Producto1", 100.0f, 10, 100);
         when(productoRepository.findById(1)).thenReturn(Optional.of(producto));
 
         Producto result = productoService.findById(1);
@@ -54,8 +54,8 @@ public class ProductoServiceTest {
 
     @Test
     void testSaveProducto() {
-        Producto producto = new Producto(null, "Nuevo", 50.0f, 5, "50ml");
-        Producto saved = new Producto(1, "Nuevo", 50.0f, 5,"50ml");
+        Producto producto = new Producto(null, "Nuevo", 50.0f, 5, 50);
+        Producto saved = new Producto(1, "Nuevo", 50.0f, 5,50);
         when(productoRepository.save(producto)).thenReturn(saved);
 
         Producto result = productoService.save(producto);

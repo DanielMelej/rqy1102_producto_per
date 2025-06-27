@@ -12,5 +12,9 @@ public interface ProductoRepository extends JpaRepository<Producto, Integer>{
     List<Producto> findByNombre(String nombre);
     Producto findByPrecio(Float precio);
     Producto findByStock(Integer stock);
+    List<Producto> findByNombreContainingIgnoreCase(String nombre);
+    
+
+
     
 }
