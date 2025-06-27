@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.productos.vmproductos.model.Producto;
@@ -22,9 +23,25 @@ public class ProductoController {
     @Autowired
     private ProductoService productoService;
 
+    // @GetMapping
+    // public ResponseEntity<List<Producto>> listar() {
+    //     List<Producto> productos = productoService.getAllProductos();
+    //     if (productos.isEmpty()) {
+    //         return ResponseEntity.noContent().build();
+    //     }
+    //     return ResponseEntity.ok(productos);
+    // }
+
     @GetMapping
-    public ResponseEntity<List<Producto>> listar() {
-        List<Producto> productos = productoService.getAllProductos();
+    public ResponseEntity<List<Producto>> listar(@RequestParam(required = false) String nombre) {
+        List<Producto> productos;
+        
+        if (nombre != null && !nombre.isBlank()) {
+            productos = productoService.buscarPorNombre(nombre);
+        } else {
+            productos = productoService.getAllProductos();
+        }
+
         if (productos.isEmpty()) {
             return ResponseEntity.noContent().build();
         }

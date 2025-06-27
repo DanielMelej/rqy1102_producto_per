@@ -38,11 +38,11 @@ src/
 - Registrar nuevos productos con validaciones.
 - Actualizar atributos de productos existentes (excepto el ID).
 - Eliminar productos del sistema.
-- Validación de tamaño en formato válido (ej: `250ml`, `500ml`).
+- Búsqueda por nombre
 - Restricciones de negocio como:
   - El stock no puede ser negativo ni cero.
   - El nombre tiene un límite de 250 caracteres.
-  - El tamaño debe seguir el patrón `^\d{1,4}ml$`.
+  - El tamaño debe ser mayor a cero y la unidad es ml.
 
 ---
 
@@ -95,6 +95,7 @@ cd rqy1102_producto_per
 |--------|------------------------------|-----------------------------------|
 | GET    | `/api/v1/productos`          | Listar todos los productos        |
 | GET    | `/api/v1/productos/{id}`     | Obtener producto por ID           |
+| GET    | `/api/v1/productos?nombre=`  | Búsqueda por nombre       |
 | POST   | `/api/v1/productos`          | Crear un nuevo producto           |
 | PUT    | `/api/v1/productos/{id}`     | Actualizar producto existente     |
 | DELETE | `/api/v1/productos/{id}`     | Eliminar un producto              |
@@ -104,10 +105,10 @@ cd rqy1102_producto_per
 ## Consideraciones
 
 - No se permite crear productos sin nombre, stock o tamaño.
-- El campo `tamano` debe seguir un formato como `250ml`, `500ml`, etc.
 - El stock debe ser mayor a cero para aceptar un nuevo producto.
 - En la actualización, **no se permite cambiar el ID**.
 - Si se intenta actualizar atributos con valores inválidos, se devuelven mensajes claros y específicos.
+- El tamaño es un número mayor a cero y su unidad es ml.
 
 ---
 

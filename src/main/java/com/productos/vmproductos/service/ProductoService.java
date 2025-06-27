@@ -3,6 +3,7 @@ package com.productos.vmproductos.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.productos.vmproductos.model.Producto;
@@ -18,7 +19,7 @@ public class ProductoService {
     private ProductoRepository productoRepository;
 
     public List<Producto> getAllProductos() {
-        return productoRepository.findAll();
+        return productoRepository.findAll(Sort.by("idProducto"));
     }
 
     public Producto findById(Integer id) {
@@ -54,18 +55,16 @@ public class ProductoService {
             throw new RuntimeException("⚠️ El producto no está disponible (stock = 0).");
         }
 
-        if (producto.getTamano() == null || producto.getTamano().trim().isEmpty()) {
-            throw new RuntimeException("❌ El tamaño del producto no puede estar vacío ni ser solo espacios.");
+        if (producto.getTamano() == null) {
+            throw new RuntimeException("❌ El tamaño del producto no puede ser nulo.");
         }
 
-        // Validar que siga el formato '100ml', '250ml', etc.
-        if (!producto.getTamano().matches("^\\d{1,4}ml$")) {
-            throw new RuntimeException(
-                    "❌ El tamaño debe estar en formato válido (ejemplo: '100ml', '250ml'). Solo se aceptan números seguidos de 'ml'.");
+        if (producto.getTamano() <= 0) {
+            throw new RuntimeException("❌ El tamaño debe ser un número positivo mayor a 0.");
         }
 
-        return productoRepository.save(producto);
-    }
+            return productoRepository.save(producto);
+        }
 
     public Producto update(Integer id, Producto productoActualizado) {
         Producto productoExistente = productoRepository.findById(id)
@@ -106,16 +105,13 @@ public class ProductoService {
             productoExistente.setStock(productoActualizado.getStock());
         }
 
-        // Validar y actualizar tamaño si viene
-        if (productoActualizado.getTamano() != null) {
-            if (productoActualizado.getTamano().trim().isEmpty()) {
-                throw new RuntimeException("❌ El tamaño no puede estar vacío");
+         // Validar y actualizar tamaño si viene
+            if (productoActualizado.getTamano() != null) {
+                if (productoActualizado.getTamano() <= 0) {
+                    throw new RuntimeException("❌ El tamaño debe ser un número positivo mayor a 0.");
+                }
+                productoExistente.setTamano(productoActualizado.getTamano());
             }
-            if (!productoActualizado.getTamano().matches("^\\d{1,4}ml$")) {
-                throw new RuntimeException("❌ El tamaño debe estar en formato válido (ejemplo: '100ml')");
-            }
-            productoExistente.setTamano(productoActualizado.getTamano());
-        }
 
         // Guardar producto actualizado
         return productoRepository.save(productoExistente);
@@ -123,6 +119,10 @@ public class ProductoService {
 
     public void delete(Integer id) {
         productoRepository.deleteById(id);
+    }
+
+    public List<Producto> buscarPorNombre(String nombre) {
+        return productoRepository.findByNombreContainingIgnoreCase(nombre);
     }
 
 }

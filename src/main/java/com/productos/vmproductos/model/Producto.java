@@ -31,6 +31,6 @@ public class Producto {
     private Integer stock;
 
     @Column(nullable = false)
-    private String tamano;
+    private Integer tamano;
 
 }
